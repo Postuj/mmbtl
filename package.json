@@ -1,0 +1,19 @@
+{
+  "name": "mmbtl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Postuj/mmbtl.git"
+  },
+  "author": "Maciej Siudak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Postuj/mmbtl/issues"
+  },
+  "homepage": "https://github.com/Postuj/mmbtl#readme"
+}
