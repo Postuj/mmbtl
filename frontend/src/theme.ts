@@ -2,9 +2,9 @@ import { createTheme } from '@mui/material/styles'
 import { red, blueGrey } from '@mui/material/colors'
 
 const theme = createTheme({
-  // typography: {
-  //   fontFamily: ['Ubuntu'].join(','),
-  // },
+  typography: {
+    fontFamily: ['Ubuntu'].join(','),
+  },
   palette: {
     primary: {
       main: '#42B883',
@@ -15,6 +15,11 @@ const theme = createTheme({
     error: {
       main: red.A400,
     },
+    background: {
+      default: blueGrey[800],
+      paper: blueGrey[900],
+      
+    }
   },
 })
 

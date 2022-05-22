@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import React, { FC } from 'react'
-import { LayoutProps } from '../common/types/props'
+import { LayoutProps } from '../common/types/layoutProps'
 
 const CenteredLayout: FC<LayoutProps> = ({ children }) => {
   return (

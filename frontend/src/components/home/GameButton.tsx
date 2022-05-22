@@ -12,13 +12,14 @@ const GameButtonElement = styled(Button)({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
+  height: 90,
 })
 
 const GameButton: React.FC<GameButtonProps> = ({ title, icon }) => {
   return (
-    <GameButtonElement variant="contained" color="primary">
+    <GameButtonElement variant="contained" color="primary" fullWidth>
       {icon}
-      <Typography variant="h6" color="secondary">
+      <Typography variant="subtitle1" color="secondary">
         {title}
       </Typography>
     </GameButtonElement>

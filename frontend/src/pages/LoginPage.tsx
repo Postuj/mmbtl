@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography'
 import CenteredLayout from '../layouts/CenteredLayout'
 import LoginForm from '../components/forms/LoginForm'
 
-const Login: FC = () => {
+const LoginPage: FC = () => {
   return (
     <CenteredLayout>
       <LoginForm />
@@ -11,4 +11,4 @@ const Login: FC = () => {
   )
 }
 
-export default Login
+export default LoginPage

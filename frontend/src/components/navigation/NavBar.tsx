@@ -1,7 +1,6 @@
 import React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import { blueGrey } from '@mui/material/colors'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import SportsEsportsRoundedIcon from '@mui/icons-material/SportsEsportsRounded'
@@ -14,7 +13,7 @@ const NavBar: React.FC = () => {
     <AppBar
       position="static"
       sx={{
-        backgroundColor: blueGrey[900],
+        bgcolor: 'background.paper',
       }}
     >
       <Toolbar>
@@ -28,7 +27,7 @@ const NavBar: React.FC = () => {
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
         <IconButton aria-label="home" size="large" color="primary">
-          <SportsEsportsRoundedIcon />
+          <SportsEsportsRoundedIcon style={{ fontSize: 40 }}/>
         </IconButton>
         <Box component="div" sx={{ flexGrow: 1 }} />
         <IconButton

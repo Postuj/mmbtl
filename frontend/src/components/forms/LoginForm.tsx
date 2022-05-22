@@ -1,16 +1,16 @@
-import React, { FC, useState } from 'react'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
+import React, { FC, useState } from 'react';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 const LoginForm: FC = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <Box
       sx={{
-        maxWidth: 300,
+        mx: 3,
       }}
     >
       <Typography variant="h3" color="primary">
@@ -43,7 +43,7 @@ const LoginForm: FC = () => {
         color="primary"
       />
     </Box>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;
