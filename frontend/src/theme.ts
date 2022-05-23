@@ -1,5 +1,5 @@
-import { createTheme } from '@mui/material/styles'
-import { red, blueGrey } from '@mui/material/colors'
+import { createTheme } from '@mui/material/styles';
+import { red, blueGrey } from '@mui/material/colors';
 
 const theme = createTheme({
   typography: {
@@ -18,9 +18,8 @@ const theme = createTheme({
     background: {
       default: blueGrey[800],
       paper: blueGrey[900],
-      
-    }
+    },
   },
-})
+});
 
-export default theme
+export default theme;

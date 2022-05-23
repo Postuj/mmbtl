@@ -4,14 +4,16 @@ import LinearProgress, {
   linearProgressClasses,
 } from '@mui/material/LinearProgress';
 import styled from '@emotion/styled';
-import { grey } from '@mui/material/colors';
+import { blueGrey } from '@mui/material/colors';
 import Typography from '@mui/material/Typography';
 
 const TimeLinearProgress = styled(LinearProgress)(() => ({
   height: 30,
   borderRadius: 10,
+  width: '100%',
+  maxWidth: 1100,
   [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: grey[800],
+    backgroundColor: blueGrey[900],
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 10,
@@ -26,7 +28,14 @@ type TimeBarProps = {
 
 const TimeBar: FC<TimeBarProps> = ({ currentTime, maxTime }) => {
   return (
-    <Box sx={{ my: 2, position: 'relative' }}>
+    <Box
+      sx={{
+        my: 2,
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
       <TimeLinearProgress
         variant="determinate"
         value={(currentTime / maxTime) * 100}

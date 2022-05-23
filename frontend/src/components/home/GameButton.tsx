@@ -13,6 +13,7 @@ const GameButtonElement = styled(Button)({
   display: 'flex',
   flexDirection: 'column',
   height: 90,
+  borderRadius: 12,
 })
 
 const GameButton: React.FC<GameButtonProps> = ({ title, icon }) => {

@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import { FC } from 'react';
-import PaperSectionLayout from '../../layouts/PaperSectionLayout';
+import PaperSection from '../common/PaperSection';
 import SentimentDissatisfiedRoundedIcon from '@mui/icons-material/SentimentDissatisfiedRounded';
 import Typography from '@mui/material/Typography';
 import { HistoryGame } from '../../common/types/game';
@@ -19,7 +19,7 @@ const GameHistory: FC = () => {
   const hasMoreThan3Games = pastGames.length > 3;
   const hasAnyGames = pastGames.length > 0;
   return (
-    <PaperSectionLayout title="Game history">
+    <PaperSection title="Game history">
       {hasAnyGames && (
         <List sx={{ width: '100%', py: 0 }} dense>
           {pastGames
@@ -54,7 +54,7 @@ const GameHistory: FC = () => {
           Show more
         </Typography>
       )}
-    </PaperSectionLayout>
+    </PaperSection>
   );
 };
 

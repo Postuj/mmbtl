@@ -7,11 +7,11 @@ import Typography from '@mui/material/Typography';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import { Player } from '../../common/types/player';
 
-type PlayerListItem = {
+type PlayerListItemProps = {
   player: Player;
 };
 
-const PlayerListItem: FC<PlayerListItem> = ({ player }) => {
+const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   return (
     <ListItem>
       <ListItemAvatar>
@@ -34,7 +34,7 @@ const PlayerListItem: FC<PlayerListItem> = ({ player }) => {
         }
         secondary={
           <Typography variant="body2" color="secondary">
-            Score: {player.score}
+            Score: {player.totalScore ? player.totalScore : 0}
           </Typography>
         }
       ></ListItemText>

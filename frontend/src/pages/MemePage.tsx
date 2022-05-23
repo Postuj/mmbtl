@@ -11,24 +11,18 @@ import ReadyButton from '../components/game/ReadyButton';
 type MemePageProps = {
   // meme: MemeType;
   // round: Round;
+  rating?: boolean;
 };
 
-const MemePage: FC<MemePageProps> = () => {
+const MemePage: FC<MemePageProps> = ({ rating }) => {
   return (
     <MemeLayout>
-      <Box
-        sx={{
-          py: 2,
-          px: 1,
-          bgcolor: 'background.paper',
-          borderBottomLeftRadius: 8,
-          borderBottomRightRadius: 8,
-        }}
-      >
-        <RoundTitle memeTitle="house fire" roundIndex={1} />
-        <TimeBar currentTime={30} maxTime={60} />
-        <MemeForm />
-      </Box>
+      <RoundTitle
+        primary={`Round ${1}${!rating ? ' rating' : ''}`}
+        secondary="house fire"
+      />
+      <TimeBar currentTime={30} maxTime={60} />
+      <MemeForm rating={!rating}/>
       <ReadyButton />
     </MemeLayout>
   );

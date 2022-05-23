@@ -3,15 +3,15 @@ import Paper from '@mui/material/Paper';
 import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { FC } from 'react';
-import { LayoutProps } from '../common/types/layoutProps';
+import { LayoutProps } from '../../common/types/layoutProps';
 
-type PaperSectionLayoutProps = {
-  title: string;
+type PaperSectionProps = {
+  title?: string;
   secondary?: string;
   sx?: SxProps<Theme> | undefined;
 };
 
-const PaperSectionLayout: FC<PaperSectionLayoutProps & LayoutProps> = ({
+const PaperSection: FC<PaperSectionProps & LayoutProps> = ({
   children,
   title,
   secondary,
@@ -27,12 +27,15 @@ const PaperSectionLayout: FC<PaperSectionLayoutProps & LayoutProps> = ({
                 mt: 2,
                 display: 'flex',
                 justifyContent: 'space-between',
+                mx: 1,
               }
         }
       >
-        <Typography variant="h6" color="secondary">
-          {title}
-        </Typography>
+        {title && (
+          <Typography variant="h6" color="secondary">
+            {title}
+          </Typography>
+        )}
         {secondary && (
           <Typography
             textTransform="uppercase"
@@ -46,10 +49,13 @@ const PaperSectionLayout: FC<PaperSectionLayoutProps & LayoutProps> = ({
       </Box>
       {children && (
         <Paper
+          className="hidden-scroll"
           variant="outlined"
           sx={{
             bgcolor: 'background.paper',
             p: 1,
+            borderRadius: 3,
+            overflowX: 'scroll',
           }}
         >
           {children}
@@ -59,4 +65,4 @@ const PaperSectionLayout: FC<PaperSectionLayoutProps & LayoutProps> = ({
   );
 };
 
-export default PaperSectionLayout;
+export default PaperSection;

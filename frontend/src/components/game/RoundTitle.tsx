@@ -2,19 +2,28 @@ import Typography from '@mui/material/Typography';
 import React, { FC } from 'react';
 
 type RoundTitleProps = {
-  roundIndex: number;
-  memeTitle: string;
+  primary?: string;
+  secondary?: string;
 };
 
-const RoundTitle: FC<RoundTitleProps> = ({ roundIndex, memeTitle }) => {
+const RoundTitle: FC<RoundTitleProps> = ({ primary, secondary }) => {
   return (
     <>
-      <Typography align="center" variant="h4" color="secondary">
-        Round {roundIndex}
-      </Typography>
-      <Typography align="center" variant="subtitle1" color="primary" textTransform="capitalize">
-        {memeTitle}
-      </Typography>
+      {primary && (
+        <Typography align="center" variant="h4" color="secondary">
+          {primary}
+        </Typography>
+      )}
+      {secondary && (
+        <Typography
+          align="center"
+          variant="subtitle1"
+          color="primary"
+          textTransform="capitalize"
+        >
+          {secondary}
+        </Typography>
+      )}
     </>
   );
 };

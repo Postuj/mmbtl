@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import React, { FC, ReactNode } from 'react';
 import { LayoutProps } from '../common/types/layoutProps';
+import NavBar from '../components/navigation/NavBar';
 
 type MemeLayoutProps = {
   title?: ReactNode;
@@ -8,7 +9,10 @@ type MemeLayoutProps = {
 
 const MemeLayout: FC<LayoutProps & MemeLayoutProps> = ({ children, title }) => {
   return (
-      <Box>{children}</Box>
+    <>
+      <NavBar />
+      <Box sx={{ px: 1, pt: 2 }}>{children}</Box>
+    </>
   );
 };
 

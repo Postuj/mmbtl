@@ -1,10 +1,10 @@
-import React from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import React, { FC } from 'react';
 import leaveButtonStyle from '../../common/styles/LeaveButtonStyle';
 
-const LeaveLobbyButton = () => {
+const LeaveGameButton: FC = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Button sx={leaveButtonStyle} variant="contained" color="error" fullWidth>
@@ -16,4 +16,4 @@ const LeaveLobbyButton = () => {
   );
 };
 
-export default LeaveLobbyButton;
+export default LeaveGameButton;

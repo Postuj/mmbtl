@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
-import PaperSectionLayout from '../../layouts/PaperSectionLayout';
+import PaperSection from '../common/PaperSection';
 import { Player } from '../../common/types/player';
 import List from '@mui/material/List';
 import PlayerListItem from '../player/PlayerListItem';
+import Box from '@mui/material/Box';
 
 type LobbyPlayerListProps = {
   players: Player[];
@@ -11,16 +12,18 @@ type LobbyPlayerListProps = {
 
 const LobbyPlayerList: FC<LobbyPlayerListProps> = ({ players, maxPlayers }) => {
   return (
-    <PaperSectionLayout
-      title="Players"
-      secondary={`${players.length}/${maxPlayers}`}
-    >
-      <List dense sx={{ width: '100%', py: 0 }}>
-        {players.map((p, i) => (
-          <PlayerListItem player={p} key={i} />
-        ))}
-      </List>
-    </PaperSectionLayout>
+    <Box sx={{ maxWidth: 1100, mx: 'auto' }}>
+      <PaperSection
+        title="Players"
+        secondary={`${players.length}/${maxPlayers}`}
+      >
+        <List dense sx={{ width: '100%', py: 0 }}>
+          {players.map((p, i) => (
+            <PlayerListItem player={p} key={i} />
+          ))}
+        </List>
+      </PaperSection>
+    </Box>
   );
 };
 

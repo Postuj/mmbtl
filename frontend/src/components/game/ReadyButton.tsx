@@ -1,22 +1,24 @@
-import styled from '@emotion/styled';
 import Button from '@mui/material/Button';
 import React, { FC } from 'react';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 type ReadyButtonProps = {};
 
 const ReadyButton: FC<ReadyButtonProps> = () => {
   return (
-    <Button
-      fullWidth
-      color="primary"
-      variant="contained"
-      sx={{ my: 2, borderRadius: 3, border: '2px #111 solid' }}
-    >
-      <Typography variant="h6" color="secondary">
-        ready
-      </Typography>
-    </Button>
+    <Box sx={{ px: 1, display: 'flex', justifyContent: 'center' }}>
+      <Button
+        fullWidth
+        color="primary"
+        variant="contained"
+        sx={{ my: 3, borderRadius: 3, maxWidth: 700 }}
+      >
+        <Typography variant="h6" color="secondary">
+          ready
+        </Typography>
+      </Button>
+    </Box>
   );
 };
 

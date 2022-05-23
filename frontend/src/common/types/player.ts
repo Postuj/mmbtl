@@ -1,4 +1,5 @@
 export type Player = {
   username: string;
-  score: number;
+  totalScore?: number;
+  scores: number[];
 };
