@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 import React, { FC } from 'react';
-import { LayoutProps } from '../common/types/layoutProps';
+import { ChildrenProps } from '../common/types/common';
 import NavBar from '../components/navigation/NavBar';
 
-type HomeLayoutProps = {};
+type HomeChildrenProps = {};
 
-const HomeLayout: FC<HomeLayoutProps & LayoutProps> = ({children}) => {
+const HomeLayout: FC<HomeChildrenProps & ChildrenProps> = ({children}) => {
   return (
     <>
       <NavBar />

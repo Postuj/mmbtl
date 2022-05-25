@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box'
 import React, { FC } from 'react'
-import { LayoutProps } from '../common/types/layoutProps'
+import { ChildrenProps } from '../common/types/common'
 import NavBar from '../components/navigation/NavBar'
 
-const DefaultLayout: FC<LayoutProps> = ({ children }) => {
+const DefaultLayout: FC<ChildrenProps> = ({ children }) => {
   return (
     <>
       <NavBar />

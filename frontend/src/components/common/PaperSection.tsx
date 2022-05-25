@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { FC } from 'react';
-import { LayoutProps } from '../../common/types/layoutProps';
+import { ChildrenProps } from '../../common/types/common';
 
 type PaperSectionProps = {
   title?: string;
@@ -11,7 +11,7 @@ type PaperSectionProps = {
   sx?: SxProps<Theme> | undefined;
 };
 
-const PaperSection: FC<PaperSectionProps & LayoutProps> = ({
+const PaperSection: FC<PaperSectionProps & ChildrenProps> = ({
   children,
   title,
   secondary,

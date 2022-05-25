@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Postuj/mmbtl/issues"
   },
-  "homepage": "https://github.com/Postuj/mmbtl#readme"
+  "homepage": "https://github.com/Postuj/mmbtl#readme",
+  "devDependencies": {
+    "typescript": "^4.7.2"
+  }
 }

@@ -1,13 +1,13 @@
 import Box from '@mui/material/Box';
 import React, { FC, ReactNode } from 'react';
-import { LayoutProps } from '../common/types/layoutProps';
+import { ChildrenProps } from '../common/types/common';
 import NavBar from '../components/navigation/NavBar';
 
-type LobbyLayoutProps = {
+type LobbyChildrenProps = {
   bottomSection?: ReactNode[];
 };
 
-const LobbyLayout: FC<LayoutProps & LobbyLayoutProps> = ({
+const LobbyLayout: FC<ChildrenProps & LobbyChildrenProps> = ({
   children,
   bottomSection,
 }) => {

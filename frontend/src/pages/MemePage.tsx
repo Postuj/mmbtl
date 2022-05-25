@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import React, { FC } from 'react';
 import MemeLayout from '../layouts/MemeLayout';
 import { Meme as MemeType } from '../common/types/meme';

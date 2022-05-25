@@ -2,6 +2,24 @@ import React, { FC, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
+import EmailLoginButton from './buttons/EmailLoginButton';
+import GoogleLogInButton from './buttons/GoogleLogInButton';
+import styled from '@mui/material/styles/styled';
+
+const StyledTextField = styled(TextField)({
+  input: {
+    color: '#EEEEEE',
+  },
+  '& label': {
+    color: '#EEEEEE',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#EEEEEE',
+    },
+  },
+});
 
 const LoginForm: FC = () => {
   const [email, setEmail] = useState('');
@@ -13,10 +31,10 @@ const LoginForm: FC = () => {
         mx: 3,
       }}
     >
-      <Typography variant="h3" color="primary">
+      <Typography variant="h2" color="primary" sx={{ mb: 2, ml: 1 }}>
         Login
       </Typography>
-      <TextField
+      <StyledTextField
         sx={{
           my: 1,
         }}
@@ -29,7 +47,7 @@ const LoginForm: FC = () => {
         variant="outlined"
         color="primary"
       />
-      <TextField
+      <StyledTextField
         sx={{
           my: 1,
         }}
@@ -42,6 +60,19 @@ const LoginForm: FC = () => {
         variant="outlined"
         color="primary"
       />
+      <EmailLoginButton />
+      <Divider
+        sx={{
+          my: 3,
+          color: 'secondary.main',
+          '&::before, &::after': {
+            borderColor: 'secondary.main',
+          },
+        }}
+      >
+        OR
+      </Divider>
+      <GoogleLogInButton />
     </Box>
   );
 };

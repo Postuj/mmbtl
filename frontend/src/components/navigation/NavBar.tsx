@@ -1,14 +1,22 @@
-import React from 'react'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
-import SportsEsportsRoundedIcon from '@mui/icons-material/SportsEsportsRounded'
-import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded'
-import Box from '@mui/material/Box'
-import Badge from '@mui/material/Badge'
+import React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import SportsEsportsRoundedIcon from '@mui/icons-material/SportsEsportsRounded';
+import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
+import { getAuth, signOut } from 'firebase/auth';
 
 const NavBar: React.FC = () => {
+  const auth = getAuth();
+
+  const logOutHandler = () => {
+    signOut(auth);
+  };
+
   return (
     <AppBar
       position="static"
@@ -27,9 +35,20 @@ const NavBar: React.FC = () => {
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
         <IconButton aria-label="home" size="large" color="primary">
-          <SportsEsportsRoundedIcon style={{ fontSize: 40 }}/>
+          <SportsEsportsRoundedIcon style={{ fontSize: 40 }} />
         </IconButton>
         <Box component="div" sx={{ flexGrow: 1 }} />
+        {auth.currentUser && (
+          <IconButton
+            aria-label="log out"
+            size="large"
+            color="secondary"
+            edge="end"
+            onClick={logOutHandler}
+          >
+            <LogoutRoundedIcon />
+          </IconButton>
+        )}
         <IconButton
           aria-label="notifications"
           size="large"
@@ -42,7 +61,7 @@ const NavBar: React.FC = () => {
         </IconButton>
       </Toolbar>
     </AppBar>
-  )
-}
+  );
+};
 
-export default NavBar
+export default NavBar;

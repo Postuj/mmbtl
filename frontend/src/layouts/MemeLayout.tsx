@@ -1,13 +1,13 @@
 import Box from '@mui/material/Box';
 import React, { FC, ReactNode } from 'react';
-import { LayoutProps } from '../common/types/layoutProps';
+import { ChildrenProps } from '../common/types/common';
 import NavBar from '../components/navigation/NavBar';
 
-type MemeLayoutProps = {
+type MemeChildrenProps = {
   title?: ReactNode;
 };
 
-const MemeLayout: FC<LayoutProps & MemeLayoutProps> = ({ children, title }) => {
+const MemeLayout: FC<ChildrenProps & MemeChildrenProps> = ({ children, title }) => {
   return (
     <>
       <NavBar />

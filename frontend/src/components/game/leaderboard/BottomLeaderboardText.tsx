@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import Box from '@mui/material/Box';
-import { LayoutProps } from '../../../common/types/layoutProps';
+import { ChildrenProps } from '../../../common/types/common';
 
-const BottomLeaderboardText: FC<LayoutProps> = ({ children }) => {
+const BottomLeaderboardText: FC<ChildrenProps> = ({ children }) => {
   return (
     <Box
       sx={{
