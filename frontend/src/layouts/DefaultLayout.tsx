@@ -9,8 +9,10 @@ const DefaultLayout: FC<ChildrenProps> = ({ children }) => {
       <NavBar />
       <Box
         sx={{
-          mx: 2,
+          px: 2,
+          mx: 'auto',
           mt: 1,
+          maxWidth: 1700,
         }}
       >
         {children}
