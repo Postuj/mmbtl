@@ -1,21 +1,21 @@
+import '../styles/globals.css';
+import type { AppProps /*, AppContext */ } from 'next/app';
+import theme from "../styles/theme/theme";
+import createEmotionCache from "../utility/createEmotionCache";
+import { CacheProvider } from "@emotion/react";
+import { ThemeProvider } from "@mui/material";
 
-import '../styles/globals.css'
-import type { AppProps /*, AppContext */ } from 'next/app'
+const clientSideEmotionCache = createEmotionCache();
 
 function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  const emotionCache = clientSideEmotionCache;
+  return (
+    <CacheProvider value={emotionCache}>
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </CacheProvider>
+  );
 }
 
-// Only uncomment this method if you have blocking data requirements for
-// every single page in your application. This disables the ability to
-// perform automatic static optimization, causing every page in your app to
-// be server-side rendered.
-//
-// MyApp.getInitialProps = async (appContext: AppContext) => {
-//   // calls page's `getInitialProps` and fills `appProps.pageProps`
-//   const appProps = await App.getInitialProps(appContext);
-
-//   return { ...appProps }
-// }
-
-export default App
+export default App;
