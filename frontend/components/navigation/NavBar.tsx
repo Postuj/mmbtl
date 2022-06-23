@@ -8,13 +8,14 @@ import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneR
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
-// import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut } from 'firebase/auth';
+import firebaseApp from '../../firebase/client';
 
 const NavBar: React.FC = () => {
-  // const auth = getAuth();
+  const auth = getAuth(firebaseApp);
 
   const logOutHandler = () => {
-    // signOut(auth);
+    signOut(auth);
   };
 
   return (
