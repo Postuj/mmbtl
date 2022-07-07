@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterDto } from 'src/auth/dto/RegisterDto';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/CreateUserDto.dto';
+import { RegistrationMethod } from './entities/registrationMethod.entity';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -11,12 +12,19 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepo: Repository<User>,
   ) {}
 
-  async createUser(userCredentials: RegisterDto): Promise<User> {
+  async createUser(
+    userCredentials: RegisterDto,
+    registrationMethod: RegistrationMethod,
+  ): Promise<User> {
     const user = this.usersRepo.create(userCredentials);
+    user.registrationMethod = registrationMethod;
     return this.usersRepo.save(user);
   }
 
-  async updateUserRefreshTokenHash(userId: number, refreshTokenHash: string | null) {
+  async updateUserRefreshTokenHash(
+    userId: number,
+    refreshTokenHash: string | null,
+  ) {
     await this.usersRepo
       .createQueryBuilder()
       .update({ refreshToken: refreshTokenHash })
@@ -28,10 +36,13 @@ export class UsersService {
     emailOrUsername: string,
   ): Promise<User | undefined> {
     return this.usersRepo
-      .createQueryBuilder("user")
-      .where('user.username = :emailOrUsername OR user.email = :emailOrUsername', {
-        emailOrUsername,
-      })
+      .createQueryBuilder('user')
+      .where(
+        'user.username = :emailOrUsername OR user.email = :emailOrUsername',
+        {
+          emailOrUsername,
+        },
+      )
       .getOne();
   }
 

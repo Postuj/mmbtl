@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserData } from '../interfaces/userData.interface';
+import { RegistrationMethod } from './registrationMethod.entity';
 
 @Entity()
 export class User {
@@ -12,14 +14,23 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
-  password: string;
-
+  @Exclude()
   @Column({ nullable: true })
-  refreshToken: string;
+  password?: string;
+
+  @Exclude()
+  @Column({ nullable: true })
+  refreshToken?: string;
+
+  @ManyToOne(
+    () => RegistrationMethod,
+    (registrationMethod) => registrationMethod.users,
+    { eager: true },
+  )
+  registrationMethod: RegistrationMethod;
 
   toUserData(): UserData {
-    const  { password, refreshToken, ...result } = this;
+    const { password, refreshToken, ...result } = this;
     return result;
   }
 }

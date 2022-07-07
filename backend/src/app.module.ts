@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { RegistrationMethod } from './users/entities/registrationMethod.entity';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 
@@ -23,14 +24,17 @@ import { UsersModule } from './users/users.module';
       username: 'root',
       password: '',
       database: 'mmbtl',
-      entities: [User],
+      entities: [User, RegistrationMethod],
       synchronize: true,
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, {
-    provide: APP_GUARD,
-    useClass: JwtAuthGuard,
-  }],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

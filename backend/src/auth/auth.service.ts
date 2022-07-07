@@ -14,20 +14,46 @@ import { User } from 'src/users/entities/user.entity';
 import { RegisterDto } from './dto/RegisterDto';
 import { UserData } from 'src/users/interfaces/userData.interface';
 import { RefreshTokenDto } from './dto/RefreshTokenDto.dto';
+import { ConfigService } from '@nestjs/config';
+import { Auth, google } from 'googleapis';
+import { RegistrationMethod } from 'src/users/entities/registrationMethod.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   private readonly logger: Logger = new Logger(AuthService.name);
-  private readonly salt: number = parseInt(process.env.SALT);
+  private readonly outhGoogleClient: Auth.OAuth2Client;
+  private readonly salt: number;
+  private readonly jwtRefreshSecret: string;
+  private registrationMethods: {
+    local: RegistrationMethod;
+    goggle: RegistrationMethod;
+  };
 
   constructor(
+    @InjectRepository(RegistrationMethod)
+    private readonly registrationMethodsRepo: Repository<RegistrationMethod>,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.salt = parseInt(this.configService.get('SALT'));
+    this.jwtRefreshSecret = this.configService.get('JWT_REFRESH_SECRET');
+    const googleClientId = this.configService.get('GOOGLE_AUTH_CLIENT_ID');
+    const googleClientSecret = this.configService.get(
+      'GOOGLE_AUTH_CLIENT_SECRET',
+    );
+    this.outhGoogleClient = new google.auth.OAuth2(
+      googleClientId,
+      googleClientSecret,
+    );
+    this.initRegistrationMethods();
+  }
 
   async validateUser(email: string, pass: string): Promise<UserData> {
     const user = await this.usersService.findOneByEmail(email);
-    if (!user) return null;
+    if (!user || !user.password) return null;
 
     const isPasswordMatching = await bcrypt.compare(pass, user.password);
 
@@ -58,12 +84,32 @@ export class AuthService {
 
   async login(user: UserData) {
     const tokens = await this.createAccessAndRefreshTokens(user.id, user.email);
-    console.log(tokens.refresh_token);
     this.updateUserRefreshToken(user.id, tokens.refresh_token);
     return {
       ...user,
       ...tokens,
     };
+  }
+
+  async loginWithGoggle(token: string) {
+    const tokenInfo = await this.outhGoogleClient.getTokenInfo(token);
+    const email = tokenInfo.email;
+
+    let user = await this.usersService.findOneByEmail(email);
+    if (!user) {
+      user = await this.registerUserWithGoggle(token);
+    } else {
+      if (user.registrationMethod !== this.registrationMethods.goggle)
+        throw new ForbiddenException();
+      const tokens = await this.createAccessAndRefreshTokens(
+        user.id,
+        user.email,
+      );
+      return {
+        ...user.toUserData(),
+        ...tokens,
+      };
+    }
   }
 
   async logout(user: UserData) {
@@ -92,12 +138,16 @@ export class AuthService {
         HttpStatus.FORBIDDEN,
       );
     // ToDo: Move hash to client
+    this.logger.log(`Registering user ${userCredentials.email} locally`);
     const passwordHash = await bcrypt.hash(userCredentials.password, this.salt);
 
-    const newUser = await this.usersService.createUser({
-      ...userCredentials,
-      password: passwordHash,
-    });
+    const newUser = await this.usersService.createUser(
+      {
+        ...userCredentials,
+        password: passwordHash,
+      },
+      this.registrationMethods.local,
+    );
 
     const { password, refreshToken, ...userData } = newUser;
 
@@ -114,7 +164,10 @@ export class AuthService {
       this.jwtService.signAsync({ sub: userId, email }),
       this.jwtService.signAsync(
         { sub: userId, email },
-        { expiresIn: 60 * 60 * 24 * 7, secret: process.env.JWT_REFRESH_SECRET },
+        {
+          expiresIn: 60 * 60 * 24 * 7,
+          secret: this.jwtRefreshSecret,
+        },
       ),
     ]);
 
@@ -130,5 +183,45 @@ export class AuthService {
       userId,
       refreshTokenHash,
     );
+  }
+
+  private async registerUserWithGoggle(token: string) {
+    const userInfo = await this.getUserInfoFromGoogleToken(token);
+    this.logger.log(`Registering user ${userInfo.email} with google`);
+    const user = await this.usersService.createUser(
+      {
+        username: userInfo.name || 'User',
+        email: userInfo.email,
+      },
+      this.registrationMethods.goggle,
+    );
+    return user;
+  }
+
+  private async getUserInfoFromGoogleToken(token: string) {
+    const userInfoClient = google.oauth2('v2').userinfo;
+
+    this.outhGoogleClient.setCredentials({
+      access_token: token,
+    });
+
+    const userInfoResponse = await userInfoClient.get({
+      auth: this.outhGoogleClient,
+    });
+
+    return userInfoResponse.data;
+  }
+
+  private async initRegistrationMethods() {
+    const local = await this.registrationMethodsRepo.findOneBy({
+      name: 'local',
+    });
+    const goggle = await this.registrationMethodsRepo.findOneBy({
+      name: 'goggle',
+    });
+    this.registrationMethods = {
+      local,
+      goggle,
+    };
   }
 }
