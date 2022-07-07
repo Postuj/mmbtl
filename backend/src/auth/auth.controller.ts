@@ -1,10 +1,19 @@
-import { Controller, Post, UseGuards, Request, Body } from '@nestjs/common';
-import { User } from 'src/users/user.decorator';
-import { User as UserEntity } from 'src/users/entities/user.entity';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Body,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RegisterDto } from './dto/RegisterDto';
 import { Public } from 'src/common/public';
+import { JwtRefreshTokenAuthGuard } from './guards/jwtRefreshToken-auth.guard';
+import { RefreshTokenDto } from './dto/RefreshTokenDto.dto';
+import { GetUser } from 'src/users/decorators/user.decorator';
+import { UserData } from 'src/users/interfaces/userData.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -12,14 +21,30 @@ export class AuthController {
 
   @Public()
   @UseGuards(LocalAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@User() user: UserEntity) {
+  async login(@GetUser() user: UserData) {
     return this.authService.login(user);
   }
 
   @Public()
+  @HttpCode(HttpStatus.CREATED)
   @Post('signup')
   async singUp(@Body() registerDto: RegisterDto) {
     return this.authService.signUpLocal(registerDto);
+  }
+
+  @Public()
+  @UseGuards(JwtRefreshTokenAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('refresh_token')
+  async refreshToken(@GetUser() user: UserData) {
+    return this.authService.refreshAccessToken(user);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('logout')
+  logout(@GetUser() user: UserData) {
+    return this.authService.logout(user);
   }
 }

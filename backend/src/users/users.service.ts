@@ -16,12 +16,20 @@ export class UsersService {
     return this.usersRepo.save(user);
   }
 
+  async updateUserRefreshTokenHash(userId: number, refreshTokenHash: string | null) {
+    await this.usersRepo
+      .createQueryBuilder()
+      .update({ refreshToken: refreshTokenHash })
+      .where({ id: userId })
+      .execute();
+  }
+
   async findOneByEmailOrUsername(
     emailOrUsername: string,
   ): Promise<User | undefined> {
     return this.usersRepo
-      .createQueryBuilder()
-      .where('username = :emailOrUsername OR email = :emailOrUsername', {
+      .createQueryBuilder("user")
+      .where('user.username = :emailOrUsername OR user.email = :emailOrUsername', {
         emailOrUsername,
       })
       .getOne();
