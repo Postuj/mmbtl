@@ -4,16 +4,12 @@ import {
   HttpStatus,
   Injectable,
   Logger,
-  NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/entities/user.entity';
 import { RegisterDto } from './dto/RegisterDto';
 import { UserData } from 'src/users/interfaces/userData.interface';
-import { RefreshTokenDto } from './dto/RefreshTokenDto.dto';
 import { ConfigService } from '@nestjs/config';
 import { Auth, google } from 'googleapis';
 import { RegistrationMethod } from 'src/users/entities/registrationMethod.entity';
@@ -28,7 +24,7 @@ export class AuthService {
   private readonly jwtRefreshSecret: string;
   private registrationMethods: {
     local: RegistrationMethod;
-    goggle: RegistrationMethod;
+    google: RegistrationMethod;
   };
 
   constructor(
@@ -91,15 +87,15 @@ export class AuthService {
     };
   }
 
-  async loginWithGoggle(token: string) {
+  async loginWithGoogle(token: string) {
     const tokenInfo = await this.outhGoogleClient.getTokenInfo(token);
     const email = tokenInfo.email;
 
     let user = await this.usersService.findOneByEmail(email);
     if (!user) {
-      user = await this.registerUserWithGoggle(token);
+      user = await this.registerUserWithGoogle(token);
     } else {
-      if (user.registrationMethod !== this.registrationMethods.goggle)
+      if (user.registrationMethod !== this.registrationMethods.google)
         throw new ForbiddenException();
       const tokens = await this.createAccessAndRefreshTokens(
         user.id,
@@ -185,7 +181,7 @@ export class AuthService {
     );
   }
 
-  private async registerUserWithGoggle(token: string) {
+  private async registerUserWithGoogle(token: string) {
     const userInfo = await this.getUserInfoFromGoogleToken(token);
     this.logger.log(`Registering user ${userInfo.email} with google`);
     const user = await this.usersService.createUser(
@@ -193,7 +189,7 @@ export class AuthService {
         username: userInfo.name || 'User',
         email: userInfo.email,
       },
-      this.registrationMethods.goggle,
+      this.registrationMethods.google,
     );
     return user;
   }
@@ -216,12 +212,12 @@ export class AuthService {
     const local = await this.registrationMethodsRepo.findOneBy({
       name: 'local',
     });
-    const goggle = await this.registrationMethodsRepo.findOneBy({
-      name: 'goggle',
+    const google = await this.registrationMethodsRepo.findOneBy({
+      name: 'google',
     });
     this.registrationMethods = {
       local,
-      goggle,
+      google,
     };
   }
 }

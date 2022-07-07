@@ -53,8 +53,8 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('goggle')
-  loginWithGoggle(@Body() tokenData: GoogleTokenDto) {
-    return this.authService.loginWithGoggle(tokenData.token);
+  @Post('google')
+  loginWithGoogle(@Body() tokenData: GoogleTokenDto) {
+    return this.authService.loginWithGoogle(tokenData.token);
   }
 }
