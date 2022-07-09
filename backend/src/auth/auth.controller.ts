@@ -5,18 +5,15 @@ import {
   Body,
   HttpCode,
   HttpStatus,
-  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RegisterDto } from './dto/RegisterDto';
 import { Public } from 'src/common/public';
 import { JwtRefreshTokenAuthGuard } from './guards/jwtRefreshToken-auth.guard';
-import { RefreshTokenDto } from './dto/RefreshTokenDto.dto';
 import { GetUser } from 'src/users/decorators/user.decorator';
 import { UserData } from 'src/users/interfaces/userData.interface';
 import GoogleTokenDto from './dto/GoogleTokenDto.dto';
-import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
