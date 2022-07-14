@@ -8,7 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { GameRound } from './gameRound';
+import { GameRound } from './gameRound.entity';
 
 export enum GameStatus {
   WAITING = 'waiting',

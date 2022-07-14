@@ -14,7 +14,7 @@ import { MemesModule } from './memes/memes.module';
 import { MemeTemplate } from './memes/entities/memeTemplate.entity';
 import { InputField } from './memes/entities/inputField.entity';
 import { Meme } from './memes/entities/meme.entity';
-import { GameRound } from './game/entities/gameRound';
+import { GameRound } from './game/entities/gameRound.entity';
 
 @Module({
   imports: [
