@@ -8,15 +8,12 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { ConfigModule } from '@nestjs/config';
 import { JwtAccessTokenStrategy } from './strategies/jwtAccessToken.strategy';
 import { JwtRefreshTokenStrategy } from './strategies/jwtRefreshToken.strategy';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { RegistrationMethod } from 'src/users/entities/registrationMethod.entity';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
     ConfigModule.forRoot(),
-    TypeOrmModule.forFeature([RegistrationMethod]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: 60 * 15 },

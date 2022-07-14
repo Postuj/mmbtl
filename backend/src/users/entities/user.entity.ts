@@ -1,9 +1,23 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Game } from 'src/game/entities/game.entity';
+import { Meme } from 'src/memes/entities/meme.entity';
+import { MemeTemplate } from 'src/memes/entities/memeTemplate.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserData } from '../interfaces/userData.interface';
-import { RegistrationMethod } from './registrationMethod.entity';
 
-@Entity()
+export enum RegistrationMethod {
+  LOCAL = 'local',
+  GOOGLE = 'google',
+}
+
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,12 +36,32 @@ export class User {
   @Column({ nullable: true })
   refreshToken?: string;
 
-  @ManyToOne(
-    () => RegistrationMethod,
-    (registrationMethod) => registrationMethod.users,
-    { eager: true },
-  )
+  @Exclude()
+  @Column({
+    type: 'enum',
+    enum: RegistrationMethod,
+    default: RegistrationMethod.LOCAL,
+  })
   registrationMethod: RegistrationMethod;
+
+  @Exclude()
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  registeredAt: Date;
+
+  @ManyToMany(() => Game, (game) => game.players)
+  games: Game[];
+
+  @OneToMany(() => Game, (game) => game.createdBy)
+  createdGames: Game[];
+
+  @OneToMany(() => Game, (game) => game.winner)
+  wonGames: Game[];
+
+  @OneToMany(() => MemeTemplate, (memeTemplate) => memeTemplate.createdBy)
+  createdMemeTemplates: MemeTemplate[];
+
+  @OneToMany(() => Meme, (meme) => meme.createdBy)
+  memes: Meme[];
 
   toUserData(): UserData {
     const { password, refreshToken, ...result } = this;

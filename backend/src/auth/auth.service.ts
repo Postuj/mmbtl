@@ -12,9 +12,9 @@ import { RegisterDto } from './dto/RegisterDto';
 import { UserData } from 'src/users/interfaces/userData.interface';
 import { ConfigService } from '@nestjs/config';
 import { Auth, google } from 'googleapis';
-import { RegistrationMethod } from 'src/users/entities/registrationMethod.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { RegistrationMethod } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -22,14 +22,8 @@ export class AuthService {
   private readonly outhGoogleClient: Auth.OAuth2Client;
   private readonly salt: number;
   private readonly jwtRefreshSecret: string;
-  private registrationMethods: {
-    local: RegistrationMethod;
-    google: RegistrationMethod;
-  };
 
   constructor(
-    @InjectRepository(RegistrationMethod)
-    private readonly registrationMethodsRepo: Repository<RegistrationMethod>,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
@@ -44,7 +38,6 @@ export class AuthService {
       googleClientId,
       googleClientSecret,
     );
-    this.initRegistrationMethods();
   }
 
   async validateUser(email: string, pass: string): Promise<UserData> {
@@ -95,7 +88,7 @@ export class AuthService {
     if (!user) {
       user = await this.registerUserWithGoogle(token);
     } else {
-      if (user.registrationMethod !== this.registrationMethods.google)
+      if (user.registrationMethod !== RegistrationMethod.GOOGLE)
         throw new ForbiddenException();
       const tokens = await this.createAccessAndRefreshTokens(
         user.id,
@@ -133,7 +126,6 @@ export class AuthService {
         },
         HttpStatus.FORBIDDEN,
       );
-    // ToDo: Move hash to client
     this.logger.log(`Registering user ${userCredentials.email} locally`);
     const passwordHash = await bcrypt.hash(userCredentials.password, this.salt);
 
@@ -142,7 +134,7 @@ export class AuthService {
         ...userCredentials,
         password: passwordHash,
       },
-      this.registrationMethods.local,
+      RegistrationMethod.LOCAL,
     );
 
     const { password, refreshToken, ...userData } = newUser;
@@ -189,7 +181,7 @@ export class AuthService {
         username: userInfo.name || 'User',
         email: userInfo.email,
       },
-      this.registrationMethods.google,
+      RegistrationMethod.GOOGLE,
     );
     return user;
   }
@@ -206,18 +198,5 @@ export class AuthService {
     });
 
     return userInfoResponse.data;
-  }
-
-  private async initRegistrationMethods() {
-    const local = await this.registrationMethodsRepo.findOneBy({
-      name: 'local',
-    });
-    const google = await this.registrationMethodsRepo.findOneBy({
-      name: 'google',
-    });
-    this.registrationMethods = {
-      local,
-      google,
-    };
   }
 }

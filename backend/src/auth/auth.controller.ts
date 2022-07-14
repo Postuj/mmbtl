@@ -23,14 +23,14 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('signin')
-  async signIn(@GetUser() user: UserData) {
+  signIn(@GetUser() user: UserData) {
     return this.authService.login(user);
   }
 
   @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post('signup')
-  async singUp(@Body() registerDto: RegisterDto) {
+  singUp(@Body() registerDto: RegisterDto) {
     return this.authService.signUpLocal(registerDto);
   }
 
@@ -38,7 +38,7 @@ export class AuthController {
   @UseGuards(JwtRefreshTokenAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('refresh-token')
-  async refreshToken(@GetUser() user: UserData) {
+  refreshToken(@GetUser() user: UserData) {
     return this.authService.refreshAccessToken(user);
   }
 

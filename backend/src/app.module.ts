@@ -6,14 +6,22 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { RegistrationMethod } from './users/entities/registrationMethod.entity';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { GameModule } from './game/game.module';
+import { Game } from './game/entities/game.entity';
+import { MemesModule } from './memes/memes.module';
+import { MemeTemplate } from './memes/entities/memeTemplate.entity';
+import { InputField } from './memes/entities/inputField.entity';
+import { Meme } from './memes/entities/meme.entity';
+import { GameRound } from './game/entities/gameRound';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    GameModule,
+    MemesModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -24,7 +32,7 @@ import { UsersModule } from './users/users.module';
       username: 'root',
       password: '',
       database: 'mmbtl',
-      entities: [User, RegistrationMethod],
+      entities: [User, Game, GameRound, MemeTemplate, InputField, Meme],
       synchronize: true,
     }),
   ],
