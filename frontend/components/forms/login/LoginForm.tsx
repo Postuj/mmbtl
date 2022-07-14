@@ -60,7 +60,7 @@ const LoginForm: FC = () => {
         variant="outlined"
         color="primary"
       />
-      <EmailLoginButton />
+      <EmailLoginButton email={email} password={password} />
       <Divider
         sx={{
           my: 3,

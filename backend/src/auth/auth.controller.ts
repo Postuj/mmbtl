@@ -22,8 +22,8 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Post('login')
-  async login(@GetUser() user: UserData) {
+  @Post('signin')
+  async signIn(@GetUser() user: UserData) {
     return this.authService.login(user);
   }
 
@@ -37,7 +37,7 @@ export class AuthController {
   @Public()
   @UseGuards(JwtRefreshTokenAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Post('refresh_token')
+  @Post('refresh-token')
   async refreshToken(@GetUser() user: UserData) {
     return this.authService.refreshAccessToken(user);
   }

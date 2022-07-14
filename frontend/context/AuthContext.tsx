@@ -1,23 +1,24 @@
 import { createContext, ReactNode, useContext } from 'react';
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import firebaseApp from '../firebase/client';
+import { User } from '../common/entities/User';
+import useAuthService from '../hooks/useAuthService';
+import { AuthService } from '../services/AuthService';
 
 type AuthContextType = {
-  user: User | null | undefined;
+  user: User | null;
   loading: boolean;
+  authService: AuthService;
 };
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  authService: AuthService.getInstance(),
 });
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const auth = getAuth(firebaseApp);
-  const [user, loading, error] = useAuthState(auth);
+  const { user, loading, authService } = useAuthService();
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, authService }}>
       {loading ? null : children}
     </AuthContext.Provider>
   );
