@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -15,6 +15,7 @@ import { MemeTemplate } from './memes/entities/memeTemplate.entity';
 import { InputField } from './memes/entities/inputField.entity';
 import { Meme } from './memes/entities/meme.entity';
 import { GameRound } from './game/entities/gameRound.entity';
+import { CoreModule } from 'core.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { GameRound } from './game/entities/gameRound.entity';
       entities: [User, Game, GameRound, MemeTemplate, InputField, Meme],
       synchronize: true,
     }),
+    CoreModule,
   ],
   controllers: [AppController],
   providers: [

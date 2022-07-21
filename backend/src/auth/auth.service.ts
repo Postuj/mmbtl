@@ -12,8 +12,6 @@ import { RegisterDto } from './dto/RegisterDto';
 import { UserData } from 'src/users/interfaces/userData.interface';
 import { ConfigService } from '@nestjs/config';
 import { Auth, google } from 'googleapis';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { RegistrationMethod } from 'src/users/entities/user.entity';
 
 @Injectable()
@@ -74,6 +72,7 @@ export class AuthService {
   async login(user: UserData) {
     const tokens = await this.createAccessAndRefreshTokens(user.id, user.email);
     this.updateUserRefreshToken(user.id, tokens.refresh_token);
+    this.logger.log(`User ${user.email} has logged in`);
     return {
       ...user,
       ...tokens,
@@ -103,6 +102,7 @@ export class AuthService {
 
   async logout(user: UserData) {
     await this.usersService.updateUserRefreshTokenHash(user.id, null);
+    this.logger.log(`User ${user.email} has logged out`);
   }
 
   async refreshAccessToken(userData: UserData) {

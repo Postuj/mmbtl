@@ -15,6 +15,7 @@ export enum GameStatus {
   STARTING = 'starting',
   RUNNING = 'running',
   FINISHED = 'finished',
+  CANCELED = 'canceled',
 }
 
 @Entity('games')
@@ -42,6 +43,10 @@ export class Game {
   rounds: GameRound[];
 
   @JoinTable({ name: 'game_players' })
-  @ManyToMany(() => User, (user) => user.games)
+  @ManyToMany(() => User, (user) => user.games, { cascade: true })
   players: User[];
+
+  @JoinTable({ name: 'game_lobby' })
+  @ManyToMany(() => User, (user) => user.games, { cascade: true })
+  lobby: User[];
 }

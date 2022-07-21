@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterDto } from 'src/auth/dto/RegisterDto';
-import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/CreateUserDto.dto';
-import { RegistrationMethod, User } from './entities/user.entity';
+import { Game } from 'src/game/entities/game.entity';
+import { Repository, UpdateQueryBuilder } from 'typeorm';
+import { RegistrationMethod, User, UserStatus } from './entities/user.entity';
+import { UserData } from './interfaces/userData.interface';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
   constructor(
     @InjectRepository(User) private readonly usersRepo: Repository<User>,
   ) {}
 
-  async createUser(
+  public async createUser(
     userCredentials: RegisterDto,
     registrationMethod: RegistrationMethod,
   ): Promise<User> {
+    UpdateQueryBuilder;
     const user = this.usersRepo.create(userCredentials);
     user.registrationMethod = registrationMethod;
     return this.usersRepo.save(user);
   }
 
-  async updateUserRefreshTokenHash(
+  public async updateUserRefreshTokenHash(
     userId: number,
     refreshTokenHash: string | null,
   ) {
@@ -31,11 +34,61 @@ export class UsersService {
       .execute();
   }
 
-  async findOneByEmailOrUsername(
+  public async handleUserJoinGame(userId: number, gameId: number) {
+    this.logger.debug(`User ${userId} is joining game ${gameId}`);
+    try {
+      await this.usersRepo
+        .createQueryBuilder()
+        .update({ currentGame: { id: gameId }, status: UserStatus.IN_LOBBY })
+        .where({ id: userId })
+        .execute();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+    this.logger.debug(`User has ${userId} joined game ${gameId}`);
+  }
+
+  public async handleUserLeaveGame(userId: number) {
+    this.logger.debug(`User is ${userId} leaving game`);
+    try {
+      this.usersRepo
+        .createQueryBuilder()
+        .update({ currentGame: null, status: UserStatus.ONLINE })
+        .where({ id: userId })
+        .execute();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+    this.logger.debug(`User ${userId} has left game`);
+  }
+
+  // ToDo: Move to user.repository.ts
+
+  public async getUserCurrentGame(userId: number) {
+    const user = await this.usersRepo.findOne({
+      where: { id: userId },
+      relations: { currentGame: true },
+    });
+    return user.currentGame;
+  }
+
+  public updateUserStatus(userId: number, status: UserStatus) {
+    this.logger.debug(`User ${userId} status changed to ${status}`);
+    return this.usersRepo
+      .createQueryBuilder()
+      .update({ status })
+      .where({ id: userId })
+      .execute();
+  }
+
+  public async findOneByEmailOrUsername(
     emailOrUsername: string,
   ): Promise<User | undefined> {
     return this.usersRepo
       .createQueryBuilder('user')
+      .select('*')
       .where(
         'user.username = :emailOrUsername OR user.email = :emailOrUsername',
         {
@@ -45,11 +98,11 @@ export class UsersService {
       .getOne();
   }
 
-  async findOneByEmail(email: string): Promise<User | undefined> {
+  public async findOneByEmail(email: string): Promise<User | undefined> {
     return this.usersRepo.findOneBy({ email });
   }
 
-  async findOneById(id: number): Promise<User | undefined> {
+  public async findOneById(id: number): Promise<User | undefined> {
     return this.usersRepo.findOneBy({ id });
   }
 }

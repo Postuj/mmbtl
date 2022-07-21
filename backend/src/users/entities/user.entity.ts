@@ -17,6 +17,13 @@ export enum RegistrationMethod {
   GOOGLE = 'google',
 }
 
+export enum UserStatus {
+  ONLINE = 'online',
+  OFFLINE = 'offline',
+  IN_LOBBY = 'in_lobby',
+  IN_GAME = 'in_game',
+}
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
@@ -36,6 +43,13 @@ export class User {
   @Column({ nullable: true })
   refreshToken?: string;
 
+  @Column({
+    type: 'enum',
+    enum: UserStatus,
+    default: UserStatus.ONLINE,
+  })
+  status: UserStatus;
+
   @Exclude()
   @Column({
     type: 'enum',
@@ -47,6 +61,9 @@ export class User {
   @Exclude()
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   registeredAt: Date;
+
+  @ManyToOne(() => Game, (game) => game.players)
+  currentGame: Game;
 
   @ManyToMany(() => Game, (game) => game.players)
   games: Game[];
@@ -64,7 +81,7 @@ export class User {
   memes: Meme[];
 
   toUserData(): UserData {
-    const { password, refreshToken, ...result } = this;
+    const { password, refreshToken, registeredAt, registrationMethod, ...result } = this;
     return result;
   }
 }

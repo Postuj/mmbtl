@@ -1,4 +1,4 @@
-import { GameRound } from 'src/game/entities/gameRound';
+import { GameRound } from 'src/game/entities/gameRound.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { MemeTemplate } from './memeTemplate.entity';
