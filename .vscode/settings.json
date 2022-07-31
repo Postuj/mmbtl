@@ -1,19 +1,15 @@
 {
     "sqltools.connections": [
         {
-            "mysqlOptions": {
-                "authProtocol": "default"
-            },
             "previewLimit": 50,
             "server": "localhost",
-            "port": 3306,
-            "driver": "MySQL",
+            "port": 5432,
+            "driver": "PostgreSQL",
             "name": "mmbtl",
-            "group": "mmbtl",
             "database": "mmbtl",
-            "username": "root",
-            "password": ""
+            "username": "postgres",
+            "password": "root"
         }
     ],
-    "prettier.printWidth": 150,
+    "prettier.printWidth": 120
 }

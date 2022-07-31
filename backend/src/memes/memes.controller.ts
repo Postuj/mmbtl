@@ -31,6 +31,6 @@ export class MemesController {
   @Get('templates/:memeId')
   @HttpCode(HttpStatus.OK)
   getMemeTemplate(@Param('memeId') memeId: number) {
-    return this.memesService.getMemeTemplate(memeId);
+    return this.memesService.getMemeTemplateById(memeId);
   }
 }

@@ -2,6 +2,7 @@ import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -9,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { GameRound } from './gameRound.entity';
+import { Player } from './player.entity';
 
 export enum GameStatus {
   WAITING = 'waiting',
@@ -33,20 +35,32 @@ export class Game {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
+  @Column({ nullable: true, default: null })
+  finishedAt?: Date;
+
+  @Column({ type: 'int', default: 3 })
+  maxRounds: number;
+
   @ManyToOne(() => User, (user) => user.createdGames)
+  @JoinColumn({ name: 'createdById' })
   createdBy: User;
 
-  @ManyToOne(() => User, (user) => user.wonGames, { nullable: true })
-  winner: User;
+  @Column({ type: 'int', nullable: false })
+  createdById: number;
 
-  @OneToMany(() => GameRound, (round) => round.game)
+  @ManyToOne(() => User, (user) => user.wonGames, { nullable: true })
+  @JoinColumn({ name: 'winnerId' })
+  winner?: User;
+
+  @Column({ type: 'int', nullable: true, default: null })
+  winnerId?: number;
+
+  @OneToMany(() => GameRound, (round) => round.game, { cascade: true })
   rounds: GameRound[];
 
-  @JoinTable({ name: 'game_players' })
-  @ManyToMany(() => User, (user) => user.games, { cascade: true })
-  players: User[];
+  @OneToMany(() => Player, (player) => player.game, { cascade: true })
+  players: Player[];
 
-  @JoinTable({ name: 'game_lobby' })
-  @ManyToMany(() => User, (user) => user.games, { cascade: true })
-  lobby: User[];
+  @OneToMany(() => Player, (player) => player.lobby, { cascade: true })
+  lobby: Player[];
 }

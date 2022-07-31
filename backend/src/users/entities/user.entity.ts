@@ -5,6 +5,7 @@ import { MemeTemplate } from 'src/memes/entities/memeTemplate.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -63,7 +64,11 @@ export class User {
   registeredAt: Date;
 
   @ManyToOne(() => Game, (game) => game.players)
+  @JoinColumn({name: 'currentGameId'})
   currentGame: Game;
+
+  @Column({nullable: true})
+  currentGameId?: number;
 
   @ManyToMany(() => Game, (game) => game.players)
   games: Game[];

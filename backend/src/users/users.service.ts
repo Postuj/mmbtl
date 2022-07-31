@@ -1,8 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterDto } from 'src/auth/dto/RegisterDto';
 import { Game } from 'src/game/entities/game.entity';
-import { Repository, UpdateQueryBuilder } from 'typeorm';
+import { In, Repository, UpdateQueryBuilder } from 'typeorm';
 import { RegistrationMethod, User, UserStatus } from './entities/user.entity';
 import { UserData } from './interfaces/userData.interface';
 
@@ -59,9 +63,17 @@ export class UsersService {
         .execute();
     } catch (error) {
       console.error(error);
-      return;
+      throw new InternalServerErrorException('Error while handling user leave');
     }
     this.logger.debug(`User ${userId} has left game`);
+  }
+
+  public async removePlayersFromGame(gameId) {
+    return this.usersRepo
+      .createQueryBuilder()
+      .update({ currentGame: null, status: UserStatus.ONLINE })
+      .where({ currentGameId: gameId })
+      .execute();
   }
 
   // ToDo: Move to user.repository.ts
@@ -74,13 +86,23 @@ export class UsersService {
     return user.currentGame;
   }
 
+  public async checkIfUserInGame(userId: number, gameId?: number) {
+    const user = await this.usersRepo.findOneBy({ id: userId });
+    if (gameId) return user.currentGameId === gameId;
+    else return user.currentGameId !== null;
+  }
+
   public updateUserStatus(userId: number, status: UserStatus) {
     this.logger.debug(`User ${userId} status changed to ${status}`);
-    return this.usersRepo
-      .createQueryBuilder()
-      .update({ status })
-      .where({ id: userId })
-      .execute();
+    return this.usersRepo.update({ id: userId }, { status });
+  }
+
+  public updateManyUsersStatus(userIds: number[], status: UserStatus) {
+    return this.usersRepo.update({ id: In(userIds) }, { status });
+  }
+
+  public updateUsersInGameStatus(gameId: number, status: UserStatus) {
+    return this.usersRepo.update({ currentGameId: gameId }, { status });
   }
 
   public async findOneByEmailOrUsername(

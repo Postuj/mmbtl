@@ -4,6 +4,7 @@ import {
   Catch,
   ExceptionFilter,
   ForbiddenException,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   UnauthorizedException,
@@ -12,6 +13,7 @@ import { AuthorizedSocket } from 'src/auth/types';
 import {
   WsBadRequestException,
   WsForbiddenException,
+  WsInternalServerErrorException,
   WsNotFoundException,
   WsUnauthorizedException,
   WsUnknownException,
@@ -54,6 +56,15 @@ export class WsExceptionFilter implements ExceptionFilter {
       const exceptionData = exception.getResponse();
       const wsException = new WsNotFoundException(
         exceptionData['message'] ?? 'Not Found',
+      );
+      socket.emit('exception', wsException.getError());
+      return;
+    }
+
+    if (exception instanceof InternalServerErrorException) {
+      const exceptionData = exception.getResponse();
+      const wsException = new WsInternalServerErrorException(
+        exceptionData['message'] ?? 'Internal Server Error',
       );
       socket.emit('exception', wsException.getError());
       return;

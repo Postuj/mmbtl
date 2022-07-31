@@ -1,6 +1,3 @@
 import { IsNumber } from 'class-validator';
 
-export class StartGameDto {
-  @IsNumber()
-  gameId: number;
-}
+export class StartGameDto {}

@@ -1,3 +1,4 @@
+import { GameRound } from 'src/game/entities/gameRound.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -29,6 +30,9 @@ export class MemeTemplate {
   // User who added meme template
   @ManyToOne(() => User, (user) => user.createdMemeTemplates)
   createdBy: User;
+
+  @OneToMany(() => GameRound, (gameRound) => gameRound.template)
+  rounds: GameRound[];
 
   @OneToMany(() => Meme, (meme) => meme.template)
   memes: Meme[];

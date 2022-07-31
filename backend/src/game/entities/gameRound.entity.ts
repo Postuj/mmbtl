@@ -1,15 +1,44 @@
-import { Meme } from "src/memes/entities/meme.entity";
-import { Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Game } from "./game.entity";
+import { Meme } from 'src/memes/entities/meme.entity';
+import { MemeTemplate } from 'src/memes/entities/memeTemplate.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Game, GameStatus } from './game.entity';
+
+export enum RoundStatus {
+  RUNNING = 'running',
+  GRADING = 'grading',
+  FINISHED = 'finished',
+}
 
 @Entity('game_rounds')
 export class GameRound {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @ManyToOne(() => Game, (game) => game.rounds)
-    game: Game;
+  @Column({ type: 'int', default: 1 })
+  index: number;
 
-    @OneToMany(() => Meme, (meme) => meme.round)
-    memes: Meme[];
+  @Column({ type: 'enum', enum: RoundStatus, default: RoundStatus.RUNNING })
+  status: RoundStatus;
+
+  @ManyToOne(() => Game, (game) => game.rounds)
+  game: Game;
+
+  @ManyToOne(() => MemeTemplate, (memeTemplate) => memeTemplate.rounds, {
+    eager: true,
+  })
+  @JoinColumn({ name: 'templateId' })
+  template: MemeTemplate;
+
+  @Column({ type: 'int', nullable: false })
+  templateId: number;
+
+  @OneToMany(() => Meme, (meme) => meme.round, { eager: true })
+  memes: Meme[];
 }

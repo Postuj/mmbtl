@@ -16,6 +16,9 @@ import { InputField } from './memes/entities/inputField.entity';
 import { Meme } from './memes/entities/meme.entity';
 import { GameRound } from './game/entities/gameRound.entity';
 import { CoreModule } from 'core.module';
+import { Grade } from './memes/entities/grade.entity';
+import { Player } from './game/entities/player.entity';
+import { DbModule } from './db/db.module';
 
 @Module({
   imports: [
@@ -23,18 +26,9 @@ import { CoreModule } from 'core.module';
     UsersModule,
     GameModule,
     MemesModule,
+    DbModule,
     ConfigModule.forRoot({
       isGlobal: true,
-    }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'mmbtl',
-      entities: [User, Game, GameRound, MemeTemplate, InputField, Meme],
-      synchronize: true,
     }),
     CoreModule,
   ],
